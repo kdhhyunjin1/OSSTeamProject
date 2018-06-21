@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 #include <cstring>
 #include <queue>
 #include <deque>
@@ -27,7 +28,7 @@ int main()
 	fp = fopen("input.txt", "r");
 	Sta_Trans.push_back(deque<int>());
 
-	int i, cnt = 0, trans_cnt = 0, w=1;
+	int i, cnt = 0, trans_cnt = 0, w=0;
 	char Ch_Sta_start[30], Ch_Sta_end[30];
 	int n; //역 이름 다 넣고 그 다음 줄에 역끼리 상관관계가 몇 개인지 적어주세요. 참고용에 의하면 마지막 592 종합운동장역 다음에 역끼리 상관관계가 몇 개인지 적어주시면 됩니다.
 
@@ -35,7 +36,7 @@ int main()
 	{
 		int tmp_n;
 		char tmp[30];
-		fscanf(fp, "%d%s\n", &tmp_n, tmp);
+		fscanf(fp, "%d%s", &tmp_n, tmp);
 		strcpy(Sub_info[tmp_n], tmp);
 	}//역 이름 넣음
 
@@ -56,13 +57,14 @@ int main()
 		DATA a;//임시 DATA형
 		if (strcmp(Sub_info[i], Ch_Sta_start) == 0) //역 이름과 출발하는 역이 같다면
 		{
+			w++;
 			a.Sta_now = i; //출발역에 숫자(출발역이 환승역일 경우 출발하는 곳이 여러 곳으로 봐야되서 꼭 전부 돌아야 됨.
 			a.time = 0; //출발할 때는 0분(초)
 			a.way = w;
 			Q.push(a); //이 구조체를 queue에 push함.
 			Sta_Trans.push_back(deque<int>());
 			Sta_Trans[w].push_back(i);
-			w++;
+			Sub_chk[i] = 1;
 		}
 	}
 
@@ -82,16 +84,19 @@ int main()
 		{
 			if (Sub_matrix[now][i]>0 && Sub_chk[i]==0 && (now_time+Sub_matrix[now][i]<=min_time_limit)) // 두 역 사이의 시간이 0이 아니고 체킹배열이 0이고 최소시간 한계를 넘지 않는다면
 			{
-				if (strcmp(Sub_info[Sub_matrix[now][i]], Ch_Sta_end) == 0)
+
+				if (strcmp(Sub_info[i], Ch_Sta_end) == 0) //여기가 문제 아예 참값이 안나옴 if문에 안들어가짐.
 				{
+
 					if (min_time > now_time + Sub_matrix[now][i])
 					{
 						min_time = now_time + Sub_matrix[now][i];
 					}
-					Sta_Trans[Q.front().way].push_back(i);
+					Sta_Trans[Q.back().way].push_back(i);
 					Trans_ans[++trans_cnt] = Q.back().way;
 					Time_ans[trans_cnt] = Q.back().time;
 				}
+
 				else
 				{
 					DATA a;
@@ -101,13 +106,14 @@ int main()
 					{
 						w++;
 						a.way = w;
-						Sta_Trans.push_back(deque<int>());
-						for (int j = 0; j < Sta_Trans[Q.front().way].size(); j++) // 이 부분이 잘못됨 deque이 가변배열 설정인데 이쪽 부분에서 계속 돌면서 메모리 계속 먹는거 같음.
+						/*for (int j = 0; j < Sta_Trans[Q.front().way].size(); j++) // 여긴 해결.
 						{
 							Sta_Trans[w].push_back(Sta_Trans[Q.front().way][j]);
 
-						}
-						Sta_Trans[w].push_back(a.Sta_now);
+						}*/
+						Sta_Trans.push_back(Sta_Trans[Q.back().way]);
+
+						Sta_Trans[w].push_back(i);
 					}
 					else a.way = Q.back().way;
 					Q.push(a);
@@ -131,5 +137,6 @@ int main()
 	
 	
 	system("pause");
+
 	return 0;
 }
