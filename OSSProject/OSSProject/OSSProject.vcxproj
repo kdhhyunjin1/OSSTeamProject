@@ -117,6 +117,7 @@
   <ItemGroup>
     <Text Include="input.txt" />
     <Text Include="output.txt" />
+    <Text Include="참고용.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OSSProject.cpp" />

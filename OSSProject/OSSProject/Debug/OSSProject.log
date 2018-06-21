@@ -1,2 +1,4 @@
 ﻿  OSSProject.cpp
+c:\users\kdhhy\source\repos\ossproject\ossproject\ossproject.cpp(105): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\kdhhy\source\repos\ossproject\ossproject\ossproject.cpp(125): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   OSSProject.vcxproj -> c:\users\kdhhy\source\repos\OSSProject\Debug\OSSProject.exe
