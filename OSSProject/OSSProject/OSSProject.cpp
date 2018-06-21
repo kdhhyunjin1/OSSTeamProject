@@ -132,9 +132,8 @@ int main()
 		{
 			cout << Sub_info[Sta_Trans[tmp][j]] << ' ';
 		}
-		cout << "걸린 시간: " << Time_ans[i]<<endl;
+		cout << "걸린 시간: " << Time_ans[i] / 60 << "시간 " << Time_ans[i] % 60 << "분" << endl;
 	}
-	
 	
 	system("pause");
 
