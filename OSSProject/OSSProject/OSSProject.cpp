@@ -76,8 +76,8 @@ int main()
 		int now, now_time;// 임시로 현재 역과 시간을 담을 변수 선언.
 
 		double min_time_limit=double(min_time)*1.3; //최소시간 한계. 임시로 min_time의 1.3배로 설정함. 회의를 통해 교체가능. 이 시간이 넘으면 더 이상 진행하지 않음.
-		now = Q.back().Sta_now;
-		now_time = Q.back().time;
+		now = Q.front().Sta_now;
+		now_time = Q.front().time;
 
 
 		for (i = 1; i <= N; i++)
@@ -92,9 +92,9 @@ int main()
 					{
 						min_time = now_time + Sub_matrix[now][i];
 					}
-					Sta_Trans[Q.back().way].push_back(i);
-					Trans_ans[++trans_cnt] = Q.back().way;
-					Time_ans[trans_cnt] = Q.back().time;
+					Sta_Trans[Q.front().way].push_back(i);
+					Trans_ans[++trans_cnt] = Q.front().way;
+					Time_ans[trans_cnt] = Q.front().time;
 				}
 
 				else
@@ -102,7 +102,7 @@ int main()
 					DATA a;
 					a.Sta_now = i;
 					a.time = now_time + Sub_matrix[now][i];
-					if (strcmp(Sub_info[a.Sta_now], Sub_info[i]) == 0)
+					if (strcmp(Sub_info[a.Sta_now], Sub_info[now]) == 0)
 					{
 						w++;
 						a.way = w;
@@ -111,11 +111,11 @@ int main()
 							Sta_Trans[w].push_back(Sta_Trans[Q.front().way][j]);
 
 						}*/
-						Sta_Trans.push_back(Sta_Trans[Q.back().way]);
+						Sta_Trans.push_back(Sta_Trans[Q.front().way]);
 
 						Sta_Trans[w].push_back(i);
 					}
-					else a.way = Q.back().way;
+					else a.way = Q.front().way;
 					Q.push(a);
 				}
 				Sub_chk[i] = 1;
