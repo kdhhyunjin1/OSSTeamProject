@@ -14,7 +14,7 @@ struct DATA
 };
 
 char Sub_info[N][30]; // 역 이름 넣을 배열
-int Sub_chk[N]; // 이미 지나온 역인지 확인
+int Sub_chk[N]; // 이미 지나온 역의 시간 저장
 int Sub_matrix[N][N]; //역 사이의 시간 넣을 2차원 인접행렬
 int Sta_end[5]; // 끝나는 역 저장(환승역일 경우 여러개가 도착점이 될 수 있으므로 역이 최대 4개까지 겹치므로 배열 5개로 생성)
 deque<deque<int> > Sta_Trans; // 이중 deque으로 환승하는 역 저장
@@ -64,7 +64,7 @@ int main()
 			Q.push(a); //이 구조체를 queue에 push함.
 			Sta_Trans.push_back(deque<int>());
 			Sta_Trans[w].push_back(i);
-			Sub_chk[i] = 1;
+			Sub_chk[i] = 0;
 		}
 	}
 
@@ -75,26 +75,23 @@ int main()
 	{
 		int now, now_time;// 임시로 현재 역과 시간을 담을 변수 선언.
 
-		double min_time_limit=double(min_time)*1.3; //최소시간 한계. 임시로 min_time의 1.3배로 설정함. 회의를 통해 교체가능. 이 시간이 넘으면 더 이상 진행하지 않음.
 		now = Q.front().Sta_now;
 		now_time = Q.front().time;
 
 
 		for (i = 1; i <= N; i++)
 		{
-			if (Sub_matrix[now][i]>0 && Sub_chk[i]==0 && (now_time+Sub_matrix[now][i]<=min_time_limit)) // 두 역 사이의 시간이 0이 아니고 체킹배열이 0이고 최소시간 한계를 넘지 않는다면
+			if (Sub_matrix[now][i] > 0 && (double(now_time + Sub_matrix[now][i]) <= double(Sub_chk[i])*1.3 || Sub_chk[i] == 0)) // 두 역 사이의 시간이 0이 아니고 시간배열이 0이거나 그 역의 시간한계를 넘지 않으면
 			{
 
-				if (strcmp(Sub_info[i], Ch_Sta_end) == 0) //여기가 문제 아예 참값이 안나옴 if문에 안들어가짐.
+				if (strcmp(Sub_info[i], Ch_Sta_end) == 0)
 				{
-
-					if (min_time > now_time + Sub_matrix[now][i])
-					{
-						min_time = now_time + Sub_matrix[now][i];
-					}
+					if (strcmp(Sub_info[i], Sub_info[Sta_Trans[Q.front().way].back()]) == 0) continue;
 					Sta_Trans[Q.front().way].push_back(i);
 					Trans_ans[++trans_cnt] = Q.front().way;
 					Time_ans[trans_cnt] = Q.front().time;
+					if (Sub_chk[i] == 0) Sub_chk[i] = now_time + Sub_matrix[now][i];
+					else Sub_chk[i] = (Sub_chk[i] < now_time + Sub_matrix[now][i]) ? Sub_chk[i] : now_time + Sub_matrix[now][i];
 				}
 
 				else
@@ -106,23 +103,19 @@ int main()
 					{
 						w++;
 						a.way = w;
-						/*for (int j = 0; j < Sta_Trans[Q.front().way].size(); j++) // 여긴 해결.
-						{
-							Sta_Trans[w].push_back(Sta_Trans[Q.front().way][j]);
-
-						}*/
 						Sta_Trans.push_back(Sta_Trans[Q.front().way]);
 
 						Sta_Trans[w].push_back(i);
 					}
 					else a.way = Q.front().way;
+					if(Sub_chk[i]==0) Sub_chk[i] = Q.front().time;
+					else Sub_chk[i] = (Sub_chk[i] < Q.front().time) ? Sub_chk[i] : Q.front().time;
 					Q.push(a);
 				}
-				Sub_chk[i] = 1;
 			}
 		}
 
-		Q.pop(); // 다 진행하고 나면 맨 위의 queue를 pop함.
+		Q.pop(); // 다 진행하고 나면 맨 앞의 queue를 pop함.
 	}
 
 	for (i = 1; i <= trans_cnt; i++)
@@ -132,7 +125,7 @@ int main()
 		{
 			cout << Sub_info[Sta_Trans[tmp][j]] << ' ';
 		}
-		cout << "걸린 시간: " << Time_ans[i]<<endl;
+		cout << "걸린 시간: " << Time_ans[i]<<"분"<<endl;
 	}
 	
 	
