@@ -13,14 +13,23 @@ struct DATA
 	int Sta_now, time, way; //현재 역정보, 시간, 몇 번째 방법
 };
 
+struct ANSWER
+{
+	int trans_ans, time_ans;
+}Answer[100];
+
 char Sub_info[N][30]; // 역 이름 넣을 배열
 int Sub_chk[N]; // 이미 지나온 역의 시간 저장
 int Sub_matrix[N][N]; //역 사이의 시간 넣을 2차원 인접행렬
 int Sta_end[5]; // 끝나는 역 저장(환승역일 경우 여러개가 도착점이 될 수 있으므로 역이 최대 4개까지 겹치므로 배열 5개로 생성)
 deque<deque<int> > Sta_Trans; // 이중 deque으로 환승하는 역 저장
-int Trans_ans[100], Time_ans[100]; // 방법 저장, 시간 저장
 int min_time=987654321; // 최소시간 처음에 큰 정수로 해야 나중에 더 작은 숫자가 나와도 교체가능.
 queue<DATA> Q; //DATA형으로 queue 생성
+
+bool compare(const ANSWER &i, const ANSWER &j)
+{
+	return i.time_ans < j.time_ans;
+}
 
 int main()
 {
@@ -88,8 +97,8 @@ int main()
 				{
 					if (strcmp(Sub_info[i], Sub_info[Sta_Trans[Q.front().way].back()]) == 0) continue;
 					Sta_Trans[Q.front().way].push_back(i);
-					Trans_ans[++trans_cnt] = Q.front().way;
-					Time_ans[trans_cnt] = Q.front().time;
+					Answer[++trans_cnt].trans_ans = Q.front().way;
+					Answer[trans_cnt].time_ans = Q.front().time;
 					if (Sub_chk[i] == 0) Sub_chk[i] = now_time + Sub_matrix[now][i];
 					else Sub_chk[i] = (Sub_chk[i] < now_time + Sub_matrix[now][i]) ? Sub_chk[i] : now_time + Sub_matrix[now][i];
 				}
@@ -118,19 +127,18 @@ int main()
 		Q.pop(); // 다 진행하고 나면 맨 앞의 queue를 pop함.
 	}
 
+	sort(Answer + 1, Answer + trans_cnt + 1, compare);
+
 	for (i = 1; i <= trans_cnt; i++)
 	{
-		int tmp = Trans_ans[i];
+		int tmp = Answer[i].trans_ans;
 		for (int j = 0; j < Sta_Trans[tmp].size(); j++)
 		{
 			cout << Sub_info[Sta_Trans[tmp][j]] << ' ';
 		}
-<<<<<<< HEAD
-		cout << "걸린 시간: " << Time_ans[i]<<"분"<<endl;
-=======
-		cout << "걸린 시간: " << Time_ans[i] / 60 << "시간 " << Time_ans[i] % 60 << "분" << endl;
->>>>>>> 6a5a814984fcb899e0961e22ca810bcae4e086c2
+		cout << "걸리는 시간: " << Answer[i].time_ans<<"분"<<endl;
 	}
+	
 	
 	system("pause");
 

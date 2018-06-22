@@ -1,9 +1,3 @@
 ﻿  OSSProject.cpp
-<<<<<<< HEAD
-c:\users\kdhhy\source\repos\ossproject\ossproject\ossproject.cpp(133): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\kdhhy\source\repos\ossproject\ossproject\ossproject.cpp(135): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   OSSProject.vcxproj -> C:\Users\kdhhy\source\repos\OSSProject\Debug\OSSProject.exe
-=======
-c:\users\hwnim\desktop\ossproject\ossproject\ossproject.cpp(131): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-  OSSProject.vcxproj -> C:\Users\hwnim\Desktop\OSSProject\Debug\OSSProject.exe
-  OSSProject.vcxproj -> C:\Users\hwnim\Desktop\OSSProject\Debug\OSSProject.pdb (Partial PDB)
->>>>>>> 6a5a814984fcb899e0961e22ca810bcae4e086c2
